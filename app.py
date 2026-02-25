@@ -1,12 +1,10 @@
 import streamlit as st
 import nltk
+nltk.download('stopwords')  # Fix: download stopwords for Streamlit Cloud
 import string
 from nltk.corpus import stopwords
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
-
-# Download stopwords (only first time)
-nltk.download('stopwords')
 
 # Function to clean text
 def preprocess(text):
