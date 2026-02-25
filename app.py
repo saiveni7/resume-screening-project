@@ -1,6 +1,6 @@
 import streamlit as st
 import nltk
-nltk.download('stopwords')  # Fix: download stopwords for Streamlit Cloud
+nltk.download('stopwords')  # Only needed first time in cloud
 import string
 from nltk.corpus import stopwords
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -8,7 +8,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 
 # Function to clean text
 def preprocess(text):
-    text = text.lower()  # Lowercase
+    text = text.lower()  # Convert to lowercase
     text = text.translate(str.maketrans('', '', string.punctuation))  # Remove punctuation
     words = text.split()
     words = [word for word in words if word not in stopwords.words('english')]  # Remove stopwords
