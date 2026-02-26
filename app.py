@@ -6,11 +6,12 @@ import PyPDF2
 
 st.title("AI Resume Screening System")
 
-# Job Description input
+# Job Description Input
 job_description = st.text_area("Enter Job Description")
 
-# Resume PDF upload and text extraction
+# PDF Resume Upload
 uploaded_file = st.file_uploader("Upload Resume (PDF)", type="pdf")
+
 resume = ""
 if uploaded_file is not None:
     pdf_reader = PyPDF2.PdfReader(uploaded_file)
@@ -18,13 +19,16 @@ if uploaded_file is not None:
         text = page.extract_text()
         if text:
             resume += text
-    # Debug print (optional, comment out if not needed)
-    st.write("Extracted Resume Text Preview:")
-    st.write(resume[:300] + "..." if len(resume) > 300 else resume)
 
-# Button to check match
+    if resume:
+        st.subheader("Resume Text Preview (first 500 characters):")
+        st.write(resume[:500])
+    else:
+        st.warning("⚠️ Could not extract text. Please upload a text-based PDF, not a scanned image.")
+
+# Matching Button
 if st.button("Check Match"):
-    if job_description.strip() == "" or resume.strip() == "":
+    if not job_description or not resume:
         st.warning("Please enter Job Description and upload Resume")
     else:
         documents = [job_description, resume]
@@ -35,18 +39,17 @@ if st.button("Check Match"):
 
         st.write(f"Matching Score: {score:.2f}%")
 
-        # Display status message
         if score > 70:
             st.success("Strong Match ✅")
         elif score > 40:
-            st.info("Average Match ⚠️")
+            st.info("Average Match 🙂")
         else:
-            st.error("Low Match ❌")
+            st.warning("Low Match ❌")
 
-        # Display bar graph of score
+        # Graph
         st.subheader("Match Score Graph")
         fig, ax = plt.subplots()
-        ax.bar(["Match Score"], [score], color='skyblue')
+        ax.bar(["Match Score"], [score])
         ax.set_ylim(0, 100)
         ax.set_ylabel("Percentage")
         st.pyplot(fig)
