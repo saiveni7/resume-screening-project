@@ -1,5 +1,4 @@
 import streamlit as st
-import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
@@ -13,10 +12,10 @@ nltk.download('stopwords')
 
 st.title("AI Resume Screening System")
 
-# Step 1: Job Description Input
+# Job Description Input
 job_description = st.text_area("Enter Job Description")
 
-# Step 2: Resume PDF Upload
+# Resume PDF Upload
 uploaded_file = st.file_uploader("Upload Resume (PDF)", type="pdf")
 resume = ""
 
@@ -25,11 +24,11 @@ if uploaded_file is not None:
     for page in pdf_reader.pages:
         resume += page.extract_text()
 
-# Step 3: Check Match Button
+# Check Match Button
 if st.button("Check Match"):
     if job_description and resume:
 
-        # Step 3a: Preprocess Text
+        # Preprocess Text
         def preprocess(text):
             text = text.lower()
             text = text.translate(str.maketrans('', '', string.punctuation))
@@ -39,13 +38,13 @@ if st.button("Check Match"):
 
         documents = [preprocess(job_description), preprocess(resume)]
 
-        # Step 3b: TF-IDF + Cosine Similarity
+        # TF-IDF + Cosine Similarity
         vectorizer = TfidfVectorizer()
         vectors = vectorizer.fit_transform(documents)
         similarity = cosine_similarity(vectors[0:1], vectors[1:2])
         score = similarity[0][0] * 100
 
-        # Step 3c: Show Matching Score
+        # Show Matching Score
         st.write(f"Matching Score: {score:.2f}%")
         if score > 70:
             st.success("Strong Match ✅")
@@ -54,7 +53,7 @@ if st.button("Check Match"):
         else:
             st.error("Low Match ❌")
 
-        # Step 3d: Graph
+        # Graph
         st.subheader("Match Score Graph")
         fig, ax = plt.subplots()
         ax.bar(["Match Score"], [score], color='skyblue')
