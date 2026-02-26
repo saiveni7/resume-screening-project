@@ -1,6 +1,6 @@
 streamlit
 pandas
 matplotlib
-scikit-learn==1.2.2
+scikit-learn
 nltk
 PyPDF2
