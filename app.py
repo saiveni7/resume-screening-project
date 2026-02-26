@@ -7,15 +7,12 @@ import nltk
 import string
 from nltk.corpus import stopwords
 
-# Download stopwords once
 nltk.download('stopwords')
 
 st.title("AI Resume Screening System")
 
-# Job Description Input
 job_description = st.text_area("Enter Job Description")
 
-# Resume PDF Upload
 uploaded_file = st.file_uploader("Upload Resume (PDF)", type="pdf")
 resume = ""
 
@@ -24,11 +21,9 @@ if uploaded_file is not None:
     for page in pdf_reader.pages:
         resume += page.extract_text()
 
-# Check Match Button
 if st.button("Check Match"):
     if job_description and resume:
 
-        # Preprocess Text
         def preprocess(text):
             text = text.lower()
             text = text.translate(str.maketrans('', '', string.punctuation))
@@ -37,14 +32,11 @@ if st.button("Check Match"):
             return " ".join(words)
 
         documents = [preprocess(job_description), preprocess(resume)]
-
-        # TF-IDF + Cosine Similarity
         vectorizer = TfidfVectorizer()
         vectors = vectorizer.fit_transform(documents)
         similarity = cosine_similarity(vectors[0:1], vectors[1:2])
         score = similarity[0][0] * 100
 
-        # Show Matching Score
         st.write(f"Matching Score: {score:.2f}%")
         if score > 70:
             st.success("Strong Match ✅")
@@ -53,7 +45,6 @@ if st.button("Check Match"):
         else:
             st.error("Low Match ❌")
 
-        # Graph
         st.subheader("Match Score Graph")
         fig, ax = plt.subplots()
         ax.bar(["Match Score"], [score], color='skyblue')
